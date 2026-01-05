@@ -66,12 +66,14 @@ class SnakeApp(AppBase):
         return True
 
     def render(self, gridManager):
+        theme = self.kernel.themeManager.get()
+        
         # Draw Apple
         ax, ay = self.apple
-        gridManager.setPixel(ax, ay, "#FF0000") # Red Apple
+        gridManager.setPixel(ax, ay, theme.appleColor)
         
         # Draw Snake
-        color = "#00FF00" if self.state == "ALIVE" else "#555555" # Gray if dead
+        color = theme.snakeColor if self.state == "ALIVE" else theme.secondary
         for sx, sy in self.snake:
             gridManager.setPixel(sx, sy, color)
 

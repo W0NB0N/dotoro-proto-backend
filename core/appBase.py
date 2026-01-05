@@ -22,3 +22,7 @@ class AppBase(ABC):
     @abstractmethod
     def onInput(self, key: str):
         pass
+
+    # <=== {OnFocus} :: {Called when app becomes active} ===>
+    def onFocus(self):
+        pass

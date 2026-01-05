@@ -1,5 +1,6 @@
 from core.appBase import AppBase
 from core.gridSystem import GridManager
+from core.themes import ThemeManager
 
 # <=== {Kernel} :: {Manages apps and inputs} ===>
 class OSKernel:
@@ -7,6 +8,7 @@ class OSKernel:
     # <=== {Constructor} :: {Initialize grid and default app} ===>
     def __init__(self, gridManager: GridManager):
         self.grid = gridManager
+        self.themeManager = ThemeManager()
         self.apps = {} # map name -> app_instance
         self.currentAppName = None
         self.activeApp = None
@@ -23,8 +25,10 @@ class OSKernel:
         if name in self.apps:
             self.currentAppName = name
             self.activeApp = self.apps[name]
+            self.activeApp.onFocus() # <--- Trigger refresh
             print(f"Switched to app: {name}")
-            self.grid.clearGrid()
+            # Clear with theme background
+            self.grid.clearGrid(self.themeManager.get().background)
 
     # <=== {HandleInput} :: {Route input to app or handle global keys} ===>
     def handleInput(self, key: str):
@@ -44,7 +48,7 @@ class OSKernel:
             
             # If logic changed, redraw app to grid
             if logicChanged:
-                self.grid.clearGrid()
+                self.grid.clearGrid(self.themeManager.get().background)
                 self.activeApp.render(self.grid)
                 return True
         return False

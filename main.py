@@ -4,6 +4,7 @@ from core.osKernel import OSKernel
 from apps.menu import MenuApp
 from apps.timer import TimerApp
 from apps.snake import SnakeApp
+from apps.themeApp import ThemeApp
 import asyncio
 
 # <=== {AppSetup} :: {Initialize fastapi, kernel, and apps} ===>
@@ -15,6 +16,7 @@ kernel = OSKernel(gridSystem)
 kernel.registerApp("Menu", MenuApp(kernel))
 kernel.registerApp("Timer", TimerApp(kernel))
 kernel.registerApp("Snake", SnakeApp(kernel))
+kernel.registerApp("Themes", ThemeApp(kernel))
 
 # Start with Menu
 kernel.switchApp("Menu")

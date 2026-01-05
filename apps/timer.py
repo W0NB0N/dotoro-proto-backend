@@ -1,5 +1,5 @@
 from core.appBase import AppBase
-from core.utils import drawText
+from core.graphics import Graphics
 import time
 
 # <=== {TimerApp} :: {Pomodoro Timer Logic} ===>
@@ -11,8 +11,10 @@ class TimerApp(AppBase):
         self.kernel = kernel
         
         self.state = "STOPPED" # STOPPED, RUNNING, ALARM
-        self.minutes = 25
+        self.defaultTime = 25
+        self.minutes = self.defaultTime
         self.seconds = 0
+        self.totalSeconds = 0
         self.lastTick = 0
         
         self.needsRedraw = True
@@ -43,27 +45,40 @@ class TimerApp(AppBase):
             self.state = "ALARM"
 
     def render(self, gridManager):
-        # Background
-        color = "#FFFFFF"
-        if self.state == "RUNNING": color = "#00FFFF" # Cyan
-        if self.state == "ALARM": color = "#FF0000"   # Red
-
-        # Draw Time "MM:SS" is too wide.
-        # Draw "MM" top, "SS" bottom
+        # Background Logic handled by GridManager
+        theme = self.kernel.themeManager.get()
+        color = theme.foreground
         
+        if self.state == "RUNNING": color = theme.accent
+        if self.state == "ALARM": color = theme.danger
+
+        # Draw Time "MM:SS" -> "MM" top "SS" bottom
         minStr = f"{self.minutes:02}"
         secStr = f"{self.seconds:02}"
         
-        drawText(gridManager, 4, 2, minStr, color)
-        # Separator
-        gridManager.setPixel(7, 7, "#555")
-        gridManager.setPixel(8, 7, "#555")
+        # Center the numbers
+        Graphics.drawTextCentered(gridManager, 2, minStr, color)
         
-        drawText(gridManager, 4, 9, secStr, color)
+        # Separator (Colon)
+        Graphics.drawRect(gridManager, 7, 7, 2, 2, theme.secondary, True)
+        
+        Graphics.drawTextCentered(gridManager, 10, secStr, color)
+        
+        # Progress Bar (Only when running)
+        if self.state == "RUNNING":
+            currentSeconds = (self.minutes * 60) + self.seconds
+            if self.totalSeconds > 0:
+                progress = currentSeconds / self.totalSeconds
+                Graphics.drawProgressBar(gridManager, 0, 15, 16, progress, color, theme.secondary)
+
+    def onFocus(self):
+        self.needsRedraw = True
 
     def onInput(self, key: str):
         if key == "Enter":
             if self.state == "STOPPED" or self.state == "PAUSED":
+                if self.state == "STOPPED":
+                    self.totalSeconds = (self.minutes * 60) + self.seconds
                 self.state = "RUNNING"
                 self.lastTick = time.time()
             elif self.state == "RUNNING":

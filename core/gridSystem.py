@@ -8,9 +8,9 @@ class GridManager:
         # Start with all black pixels
         self.pixels = [["#000000" for _ in range(16)] for _ in range(16)]
 
-    # <=== {ClearGrid} :: {Reset all pixels to black} ===>
-    def clearGrid(self):
-        self.pixels = [["#000000" for _ in range(16)] for _ in range(16)]
+    # <=== {ClearGrid} :: {Reset all pixels to color} ===>
+    def clearGrid(self, color: str = "#000000"):
+        self.pixels = [[color for _ in range(self.width)] for _ in range(self.height)]
 
     # <=== {SetPixel} :: {Update single pixel color safely} ===>
     def setPixel(self, x: int, y: int, color: str):
