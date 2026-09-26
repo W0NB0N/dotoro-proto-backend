@@ -1,6 +1,68 @@
 # <=== {GraphicsAPI} :: {Universal drawing utilities and fonts} ===>
 
 # <=== {Fonts} :: {Bitmap font data} ===>
+
+FONT_3X4 = {
+    '0': [[1, 1, 1], [1, 0, 1], [1, 0, 1], [1, 1, 1]],
+    '1': [[0, 1, 0], [1, 1, 0], [0, 1, 0], [1, 1, 1]],
+    '2': [[0, 1, 1], [1, 1, 1], [1, 0, 0], [1, 1, 1]],
+    '3': [[1, 1, 1], [0, 1, 1], [0, 0, 1], [1, 1, 1]],
+    '4': [[1, 0, 0], [1, 0, 1], [1, 1, 1], [0, 0, 1]],
+    '5': [[1, 1, 0], [1, 1, 1], [0, 0, 1], [1, 1, 1]],
+    '6': [[1, 1, 1], [1, 1, 0], [1, 0, 1], [1, 1, 1]],
+    '7': [[1, 1, 1], [0, 0, 1], [0, 1, 0], [1, 0, 0]],
+    '8': [[1, 1, 1], [1, 1, 1], [1, 0, 1], [1, 1, 1]],
+    '9': [[1, 1, 1], [1, 0, 1], [0, 1, 1], [1, 1, 1]],
+    'A': [[0, 1, 1], [1, 0, 1], [1, 1, 1], [1, 0, 1]],
+    'B': [[1, 1, 0], [1, 1, 1], [1, 0, 1], [1, 1, 1]],
+    'C': [[1, 1, 1], [1, 0, 0], [1, 0, 0], [1, 1, 1]],
+    'D': [[1, 1, 0], [1, 0, 1], [1, 0, 1], [1, 1, 1]],
+    'E': [[1, 1, 1], [1, 1, 0], [1, 0, 0], [1, 1, 1]],
+    'F': [[1, 1, 1], [1, 1, 0], [1, 0, 0], [1, 0, 0]],
+    'G': [[1, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0]],
+    'H': [[1, 0, 1], [1, 0, 1], [1, 1, 1], [1, 0, 1]],
+    'I': [[1, 1, 1], [0, 1, 0], [0, 1, 0], [1, 1, 1]],
+    'J': [[0, 0, 1], [0, 0, 1], [1, 0, 1], [0, 1, 0]],
+    'K': [[1, 0, 1], [1, 1, 0], [1, 0, 1], [1, 0, 1]],
+    'L': [[1, 0, 0], [1, 0, 0], [1, 0, 0], [1, 1, 1]],
+    'M': [[1, 1, 1], [1, 1, 1], [1, 0, 1], [1, 0, 1]],
+    'N': [[1, 1, 0], [1, 0, 1], [1, 0, 1], [1, 0, 1]],
+    'O': [[1, 1, 0], [1, 0, 1], [1, 0, 1], [0, 1, 1]],
+    'P': [[1, 1, 0], [1, 0, 1], [1, 1, 1], [1, 0, 0]],
+    'Q': [[0, 1, 1], [1, 0, 1], [0, 1, 1], [0, 0, 1]],
+    'R': [[1, 1, 0], [1, 0, 1], [1, 1, 0], [1, 0, 1]],
+    'S': [[0, 1, 1], [1, 0, 0], [0, 1, 1], [1, 1, 1]],
+    'T': [[1, 1, 1], [0, 1, 0], [0, 1, 0], [0, 1, 0]],
+    'U': [[1, 0, 1], [1, 0, 1], [1, 0, 1], [0, 1, 1]],
+    'V': [[1, 0, 1], [1, 0, 1], [1, 0, 1], [0, 1, 0]],
+    'W': [[1, 0, 1], [1, 0, 1], [1, 1, 1], [1, 1, 1]],
+    'X': [[1, 0, 1], [0, 1, 0], [1, 0, 1], [1, 0, 1]],
+    'Y': [[1, 0, 1], [0, 1, 0], [0, 1, 0], [0, 1, 0]],
+    'Z': [[1, 1, 1], [0, 0, 1], [1, 0, 0], [1, 1, 1]],
+    '!': [[0, 1, 0], [0, 1, 0], [0, 0, 0], [0, 1, 0]],
+    '"': [[1, 0, 1], [1, 0, 1], [0, 0, 0], [0, 0, 0]],
+    '\'': [[0, 1, 0], [0, 1, 0], [0, 0, 0], [0, 0, 0]],
+    '(': [[0, 1, 0], [1, 0, 0], [1, 0, 0], [0, 1, 0]],
+    ')': [[0, 1, 0], [0, 0, 1], [0, 0, 1], [0, 1, 0]],
+    '*': [[1, 0, 1], [0, 1, 0], [1, 0, 1], [0, 0, 0]],
+    '+': [[0, 0, 0], [0, 1, 0], [1, 1, 1], [0, 1, 0]],
+    ',': [[0, 0, 0], [0, 0, 0], [0, 1, 0], [1, 0, 0]],
+    '-': [[0, 0, 0], [0, 0, 0], [1, 1, 1], [0, 0, 0]],
+    '.': [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 1, 0]],
+    '/': [[0, 0, 1], [0, 1, 0], [0, 1, 0], [1, 0, 0]],
+    ':': [[0, 1, 0], [0, 0, 0], [0, 1, 0], [0, 0, 0]],
+    ';': [[0, 1, 0], [0, 0, 0], [0, 1, 0], [1, 0, 0]],
+    '=': [[0, 0, 0], [1, 1, 1], [0, 0, 0], [1, 1, 1]],
+    '[': [[1, 1, 0], [1, 0, 0], [1, 0, 0], [1, 1, 0]],
+    '\\': [[1, 0, 0], [0, 1, 0], [0, 1, 0], [0, 0, 1]],
+    ']': [[0, 1, 1], [0, 0, 1], [0, 0, 1], [0, 1, 1]],
+    '^': [[0, 1, 0], [1, 0, 1], [0, 0, 0], [0, 0, 0]],
+    '_': [[0, 0, 0], [0, 0, 0], [0, 0, 0], [1, 1, 1]],
+    '`': [[0, 1, 0], [0, 0, 1], [0, 0, 0], [0, 0, 0]],
+    '|': [[0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]],
+    '~': [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+}
+
 FONT_3X5 = {
     '0': [[1, 1, 1], [1, 0, 1], [1, 0, 1], [1, 0, 1], [1, 1, 1]],
     '1': [[0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]],
@@ -351,6 +413,59 @@ class Graphics:
                 y1 += sy
 
     @staticmethod
+    def drawMarqueeText(grid, x: int, y: int, width: int, text: str, color: str, time_ms: int, speed_pps: float = 12.0, font=FONT_3X5):
+        """
+        Draws text clipped to a horizontal window of [x, x+width-1].
+        If the text fits, it is drawn statically.
+        If it overflows, it scrolls from right to left using time_ms and speed_pps.
+        """
+        # Calculate total width of the text in pixels
+        totalWidth = 0
+        for char in text:
+            charKey = char.upper()
+            bitmap = font.get(charKey, font.get(' ', [[0]]))
+            totalWidth += len(bitmap[0]) + 1
+        if totalWidth > 0:
+            totalWidth -= 1 # remove last space
+        
+        if totalWidth <= width:
+            # Fits, just draw it normally
+            Graphics.drawText(grid, x, y, text, color, font)
+            return
+
+        # Does not fit, scroll it!
+        # Scroll loop range includes a gap at the end
+        scroll_range = totalWidth + 12
+        time_sec = time_ms / 1000.0
+        offset = int(time_sec * speed_pps) % scroll_range
+        
+        draw_x = x - offset
+        cursorX = draw_x
+        
+        for char in text:
+            charKey = char.upper()
+            if charKey in font:
+                bitmap = font[charKey]
+            elif char in font:
+                bitmap = font[char]
+            else:
+                if '?' in font: bitmap = font['?']
+                else: bitmap = font.get(' ', [[0]])
+
+            height = len(bitmap)
+            charW = len(bitmap[0])
+            
+            for r in range(height):
+                for c in range(charW):
+                    if r < len(bitmap) and c < len(bitmap[r]) and bitmap[r][c]:
+                        pixel_x = cursorX + c
+                        # Only draw if within the marquee window bounds
+                        if x <= pixel_x < x + width:
+                            grid.setPixel(pixel_x, y + r, color)
+            
+            cursorX += charW + 1
+
+    @staticmethod
     def drawProgressBar(grid, x: int, y: int, width: int, progress: float, fgColor: str, bgColor: str):
         # Draw Background
         Graphics.drawLine(grid, x, y, x+width-1, y, bgColor)
@@ -380,4 +495,28 @@ class Graphics:
             currentWidth += charWidth + 1 # 1px spacing
             
         return truncated
+
+    @staticmethod
+    def drawImage(grid, x: int, y: int, image_data):
+        """Draws a 2D array of colors (hex strings or None) onto the grid at (x, y)."""
+        h = len(image_data)
+        w = len(image_data[0]) if h > 0 else 0
+        
+        # Auto-upscale 16x16 images to 32x32 when rendering on a 32x32 grid
+        scale = 1
+        if w == 16 and h == 16 and grid.width == 32 and grid.height == 32:
+            scale = 2
+            
+        for r in range(h):
+            for c in range(w):
+                color = image_data[r][c]
+                if color is not None:
+                    if scale == 2:
+                        for dr in range(2):
+                            for dc in range(2):
+                                grid.setPixel(x * 2 + c * 2 + dc, y * 2 + r * 2 + dr, color)
+                    else:
+                        grid.setPixel(x + c, y + r, color)
+
+
 

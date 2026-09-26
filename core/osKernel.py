@@ -37,6 +37,11 @@ class OSKernel:
             self.switchApp("Menu")
             return
 
+        # Global Boot Key (re-triggers BIOS bootup sequence)
+        if key == "Boot":
+            self.switchApp("Boot")
+            return
+
         if self.activeApp:
             self.activeApp.onInput(key)
 

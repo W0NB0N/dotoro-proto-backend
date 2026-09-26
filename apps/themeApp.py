@@ -1,8 +1,8 @@
 from core.appBase import AppBase
-from core.graphics import Graphics
+from core.graphics import Graphics, FONT_5X7, FONT_3X5
 from core.themes import THEMES
 
-# <=== {ThemeApp} :: {Theme Selection Screen} ===>
+# <=== {ThemeApp} :: {Theme Selection Screen on 32x32 Grid} ===>
 class ThemeApp(AppBase):
     
     def __init__(self, kernel):
@@ -30,29 +30,32 @@ class ThemeApp(AppBase):
     def render(self, gridManager):
         # We render the CURRENT selection using ITS OWN theme colors
         # so the user can preview it.
-        
         themeName = self.themeNames[self.currentIndex]
-        # Temporarily get the preview theme object
         previewTheme = THEMES[themeName]
         
         # Clear grid with preview background
         gridManager.clearGrid(previewTheme.background)
         
-        # Truncate text to fit 16px wide
-        # "Cyberpunk" -> "Cybe"
-        displayText = Graphics.truncateText(themeName, 16)
+        # Truncate text to fit 32px wide in FONT_5X7
+        displayText = Graphics.truncateText(themeName.upper(), 32, FONT_5X7)
         
-        # Draw centered
-        Graphics.drawTextCentered(gridManager, 6, displayText, previewTheme.accent)
+        # Draw centered theme name
+        Graphics.drawTextCentered(gridManager, 13, displayText, previewTheme.accent, FONT_5X7)
         
-        # Draw Text Label "THEME" (top)
-        Graphics.drawTextCentered(gridManager, 1, "THEME", previewTheme.secondary)
+        # Draw Label "THEME" (top)
+        Graphics.drawTextCentered(gridManager, 4, "THEME", previewTheme.secondary, FONT_3X5)
 
-        # Draw Pagination dots
-        startX = (16 - (len(self.themeNames) * 2)) // 2
+        # Draw Pagination dots (centered, balanced for 32x32)
+        dotWidth = 2
+        dotHeight = 2
+        spacing = 2
+        totalDotWidth = len(self.themeNames) * (dotWidth + spacing) - spacing
+        startX = (32 - totalDotWidth) // 2
+        dotY = 26
+
         for i in range(len(self.themeNames)):
             c = previewTheme.foreground if i == self.currentIndex else previewTheme.secondary
-            gridManager.setPixel(startX + (i*2), 14, c)
+            Graphics.drawRect(gridManager, startX + i * (dotWidth + spacing), dotY, dotWidth, dotHeight, c, True)
 
     def onInput(self, key: str):
         if key == "Left":

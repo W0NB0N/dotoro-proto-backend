@@ -1,54 +1,81 @@
+import time
 from core.appBase import AppBase
-from core.graphics import Graphics
+from core.graphics import Graphics, FONT_5X7
 
-# <=== {MenuApp} :: {App Selection Screen} ===>
+# <=== {MenuApp} :: {App Selection Screen on 32x32 grid} ===>
 class MenuApp(AppBase):
     
     def __init__(self, kernel):
         super().__init__()
         self.appName = "Menu"
         self.kernel = kernel
-        self.options = ["Timer", "Snake", "Theme"]
+        self.options = ["Timer", "Snake", "Theme", "Gallery"]
         self.maxIndex = len(self.options) - 1
         self.currentIndex = 0
-        # self.colors = ["#FFD700", "#00FF00"] # Gold, Green (Deprecated)
         
-        # Init icons/text
+        self.font = FONT_5X7
         self.needsRedraw = True
-
-    # <=== {Update} :: {Handle logic} ===>
-    def update(self) -> bool:
-        if self.needsRedraw:
-            self.needsRedraw = False
-            return True
-        return False
 
     def onFocus(self):
         self.needsRedraw = True
 
-    # <=== {Render} :: {Draw menu options} ===>
+    def getTextWidth(self, text: str) -> int:
+        totalWidth = 0
+        for char in text:
+            charKey = char.upper()
+            bitmap = self.font.get(charKey, self.font.get(' ', [[0]]))
+            totalWidth += len(bitmap[0]) + 1
+        if totalWidth > 0:
+            totalWidth -= 1
+        return totalWidth
+
+    # <=== {Update} :: {Handle animation and redraw logic} ===>
+    def update(self) -> bool:
+        currentText = self.options[self.currentIndex].upper()
+        textWidth = self.getTextWidth(currentText)
+        
+        # If it overflows 32px, we return True to update the marquee animation continuously
+        if textWidth > 32:
+            return True
+            
+        if self.needsRedraw:
+            self.needsRedraw = False
+            return True
+            
+        return False
+
+    # <=== {Render} :: {Draw menu options and pagination dots} ===>
     def render(self, gridManager):
         theme = self.kernel.themeManager.get()
+        currentText = self.options[self.currentIndex].upper()
         
-        # Draw Current Selection
-        if self.currentIndex == 0:
-            # Timer Text
-            Graphics.drawTextCentered(gridManager, 7, "TIMER", theme.accent)
-            # Graphics.drawIcon(gridManager, 2, 6, "ARROW_UP", theme.secondary) # Decoration
-        elif self.currentIndex == 1:
-            # Snake Text
-            Graphics.drawTextCentered(gridManager, 7, "SNAKE", theme.accent)
-        elif self.currentIndex == 2:
-            # Theme Switcher
-            Graphics.drawTextCentered(gridManager, 7, "THEME", theme.warning)
+        # Determine color based on selection
+        color = theme.accent
+        if self.currentIndex == 2:
+            color = theme.warning
+        elif self.currentIndex == 3:
+            color = theme.success
             
-        # Draw Dots for pagination
-        startX = (16 - (len(self.options) * 3)) // 2 + 1
+        # Vertical center for 5x7 font on 32x32 display is around y=12
+        textY = 12
+
+        # Draw utilizing the global marquee scrolling utility
+        Graphics.drawMarqueeText(gridManager, 0, textY, 32, currentText, color, int(time.time() * 1000), 12.0, self.font)
+            
+        # Draw Dots for pagination (balanced for 32x32)
+        # Dot width = 3, height = 2, spacing = 2
+        dotWidth = 3
+        dotHeight = 2
+        spacing = 2
+        totalDotWidth = len(self.options) * (dotWidth + spacing) - spacing
+        startX = (32 - totalDotWidth) // 2
+        dotY = 26
+
         for i in range(len(self.options)):
             c = theme.foreground if i == self.currentIndex else theme.secondary
-            Graphics.drawRect(gridManager, startX + (i*3), 14, 2, 1, c, True)
+            Graphics.drawRect(gridManager, startX + i * (dotWidth + spacing), dotY, dotWidth, dotHeight, c, True)
 
-    # <=== {Input} :: {Navigate menu} ===>
+    # <=== {Input} :: {Navigate menu options} ===>
     def onInput(self, key: str):
         if key == "Left":
             self.currentIndex = max(0, self.currentIndex - 1)
