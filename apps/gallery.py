@@ -7,11 +7,11 @@ from core.animLoader import AnimationManager
 # <=== {GalleryApp} :: {App to display custom pixel art images and GIF animations} ===>
 class GalleryApp(AppBase):
     
-    def __init__(self, kernel):
+    def __init__(self, kernel, anim_manager=None):
         super().__init__()
         self.appName = "Gallery"
         self.kernel = kernel
-        self.animManager = AnimationManager()
+        self.animManager = anim_manager if anim_manager is not None else AnimationManager()
         
         self.items = [] # list of {"name": str, "type": "image"|"animation", ...}
         self.currentIndex = 0
