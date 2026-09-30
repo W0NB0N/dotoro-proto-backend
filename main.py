@@ -131,6 +131,8 @@ async def idle_reaper():
                 if session:
                     print(f"[Reaper] Session {sid} timed out due to inactivity. Closing connection...")
                     try:
+                        await session.websocket.send_json({"type": "IDLE_TIMEOUT"})
+                        await asyncio.sleep(0.05)
                         await session.websocket.close(code=4001, reason="Session idle timeout")
                     except Exception:
                         pass
