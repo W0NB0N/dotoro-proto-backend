@@ -9,7 +9,7 @@ class MenuApp(AppBase):
         super().__init__()
         self.appName = "Menu"
         self.kernel = kernel
-        self.options = ["Timer", "Snake", "Theme", "Gallery"]
+        self.options = ["Pomodoro", "Snake", "Theme", "Gallery"]
         self.maxIndex = len(self.options) - 1
         self.currentIndex = 0
         
@@ -32,11 +32,11 @@ class MenuApp(AppBase):
     # <=== {Update} :: {Handle animation and redraw logic} ===>
     def update(self) -> bool:
         currentText = self.options[self.currentIndex].upper()
-        textWidth = self.getTextWidth(currentText)
-        
-        # If it overflows 32px, we return True to update the marquee animation continuously
-        if textWidth > 32:
-            return True
+        if currentText != "POMODORO":
+            textWidth = self.getTextWidth(currentText)
+            # If it overflows 32px, we return True to update the marquee animation continuously
+            if textWidth > 32:
+                return True
             
         if self.needsRedraw:
             self.needsRedraw = False
@@ -47,7 +47,7 @@ class MenuApp(AppBase):
     # <=== {Render} :: {Draw menu options and pagination dots} ===>
     def render(self, gridManager):
         theme = self.kernel.themeManager.get()
-        currentText = self.options[self.currentIndex].upper()
+        selected = self.options[self.currentIndex]
         
         # Determine color based on selection
         color = theme.accent
@@ -56,11 +56,13 @@ class MenuApp(AppBase):
         elif self.currentIndex == 3:
             color = theme.success
             
-        # Vertical center for 5x7 font on 32x32 display is around y=12
-        textY = 12
-
-        # Draw utilizing the global marquee scrolling utility
-        Graphics.drawMarqueeText(gridManager, 0, textY, 32, currentText, color, int(time.time() * 1000), 12.0, self.font)
+        # Draw Pomodoro as 2 stacked lines: "POMO" then "DORO"
+        if selected == "Pomodoro":
+            Graphics.drawTextCentered(gridManager, 7, "POMO", color, self.font)
+            Graphics.drawTextCentered(gridManager, 15, "DORO", color, self.font)
+        else:
+            # Single centered marquee line for other apps at y=12
+            Graphics.drawMarqueeText(gridManager, 0, 12, 32, selected.upper(), color, int(time.time() * 1000), 12.0, self.font)
             
         # Draw Dots for pagination (balanced for 32x32)
         # Dot width = 3, height = 2, spacing = 2

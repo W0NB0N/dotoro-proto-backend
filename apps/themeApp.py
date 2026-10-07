@@ -11,7 +11,8 @@ class ThemeApp(AppBase):
         self.kernel = kernel
         self.themeNames = self.kernel.themeManager.listThemes()
         self.maxIndex = len(self.themeNames) - 1
-        self.currentIndex = 0
+        current = self.kernel.themeManager.get().name
+        self.currentIndex = self.themeNames.index(current) if current in self.themeNames else 0
         self.needsRedraw = True
 
     def onFocus(self):

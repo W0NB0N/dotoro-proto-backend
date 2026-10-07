@@ -9,7 +9,7 @@ from core.gridSystem import GridManager
 from core.osKernel import OSKernel
 from core.animLoader import AnimationManager
 from apps.menu import MenuApp
-from apps.timer import TimerApp
+from apps.pomodoro import PomodoroApp
 from apps.snake import SnakeApp
 from apps.themeApp import ThemeApp
 from apps.gallery import GalleryApp
@@ -39,15 +39,18 @@ def create_session():
 
     kernel.registerApp("Boot", BootApp(kernel))
     kernel.registerApp("Menu", MenuApp(kernel))
-    kernel.registerApp("Timer", TimerApp(kernel))
+    pomodoro = PomodoroApp(kernel)
+    kernel.registerApp("Pomodoro", pomodoro)
+    kernel.registerApp("Timer", pomodoro)  # Alias for backward compatibility
     kernel.registerApp("Snake", SnakeApp(kernel))
     kernel.registerApp("Themes", ThemeApp(kernel))
 
     # GalleryApp reuses the shared cached animation manager
     kernel.registerApp("Gallery", GalleryApp(kernel, anim_manager=shared_anim_manager))
 
-    # Start each session with the BIOS bootup sequence
-    kernel.switchApp("Boot")
+    # Dotoro starts in POWER OFF state until user triggers boot/power on
+    kernel.isPowered = False
+    grid.clearGrid("#000000")
 
     return kernel, grid
 
@@ -168,7 +171,8 @@ async def websocketEndpoint(websocket: WebSocket):
                     await websocket.send_json({
                         "type": "GRID_UPDATE",
                         "grid": grid.getFlatGrid(),
-                        "theme": kernel.themeManager.toClientPayload()
+                        "theme": kernel.themeManager.toClientPayload(),
+                        "powered": kernel.isPowered
                     })
 
                 # Check if Boot sequence completed and needs sound signal
@@ -181,6 +185,16 @@ async def websocketEndpoint(websocket: WebSocket):
                         "type": "BOOT_COMPLETE"
                     })
 
+                # Check if Pomodoro / Timer app reached ALARM state and needs sound signal
+                if (kernel.activeApp
+                    and kernel.activeApp.appName in ("Pomodoro", "Timer")
+                    and kernel.activeApp.state == "ALARM"
+                    and not kernel.activeApp.alarmSignaled):
+                    kernel.activeApp.alarmSignaled = True
+                    await websocket.send_json({
+                        "type": "TIMER_ALARM"
+                    })
+
                 await asyncio.sleep(0.041)  # ~24 FPS
         except asyncio.CancelledError:
             pass
@@ -190,11 +204,12 @@ async def websocketEndpoint(websocket: WebSocket):
     session.loop_task = asyncio.create_task(session_loop())
 
     try:
-        # Send initial grid state
+        # Send initial grid state (device is initially OFF)
         await websocket.send_json({
             "type": "GRID_UPDATE",
             "grid": grid.getFlatGrid(),
-            "theme": kernel.themeManager.toClientPayload()
+            "theme": kernel.themeManager.toClientPayload(),
+            "powered": kernel.isPowered
         })
 
         # Process incoming user input events for this session

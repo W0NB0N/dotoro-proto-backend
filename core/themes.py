@@ -86,7 +86,7 @@ THEMES = {
 # <=== {ThemeManager} :: {Manage switching} ===>
 class ThemeManager:
     def __init__(self):
-        self.currentTheme = CYBERPUNK
+        self.currentTheme = CATPPUCCIN
     
     def setTheme(self, themeName: str):
         if themeName in THEMES:
